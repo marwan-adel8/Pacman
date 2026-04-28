@@ -585,10 +585,17 @@ class Game:
                 ## TODO: could this exceed the total time
                 self.unmute()
 
-        agentIndex = self.startingIndex
         numAgents = len( self.agents )
+        gameStarted = False  # Ghosts frozen until Pacman makes first move
+        agentIndex = 0  # Always start with Pacman
 
         while not self.gameOver:
+            # Ghosts wait for Pacman to make first move before doing anything
+            if agentIndex > 0 and not gameStarted:
+                # Skip ghost turns until game starts
+                agentIndex = ( agentIndex + 1 ) % numAgents
+                continue
+
             # Fetch the next agent
             agent = self.agents[agentIndex]
             move_time = 0
@@ -663,6 +670,17 @@ class Game:
                 action = agent.getAction(observation)
             self.unmute()
 
+            # Handle no action from Pacman (key not pressed)
+            if action is None and agentIndex == 0:
+                if not gameStarted:
+                    # Game hasn't started yet – keep waiting for first keypress
+                    import time
+                    time.sleep(0.05)
+                    continue
+                else:
+                    # Game already started – give Pacman a Stop so ghosts still move
+                    action = Directions.STOP
+
             # Execute the action
             self.moveHistory.append( (agentIndex, action) )
             if self.catchExceptions:
@@ -685,6 +703,11 @@ class Game:
             self.rules.process(self.state, self)
             # Track progress
             if agentIndex == numAgents + 1: self.numMoves += 1
+
+            # Mark game as started when Pacman (agent 0) makes his first move
+            if agentIndex == 0 and not gameStarted:
+                gameStarted = True
+
             # Next agent
             agentIndex = ( agentIndex + 1 ) % numAgents
 

@@ -46,10 +46,22 @@ python pacman.py
 ### تشغيل الخوارزميات
 
 ```bash
-python pacman.py -l tinyMaze -p SearchAgent
+
+علشان تعمل run للعبه الاساسيه 
+
+✅ python pacman.py
+
+# 1️⃣ DFS — بيلاقي solution بس مش optimal
+python pacman.py -l mediumMaze -p SearchAgent -a fn=dfs
+
+# 2️⃣ BFS — أقصر مسار بس بيفتح nodes كتير
 python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs
+
+# 3️⃣ UCS — زي BFS بس يراعي الـ cost
 python pacman.py -l mediumMaze -p SearchAgent -a fn=ucs
-python pacman.py -l bigMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
+
+# 4️⃣ A* — أحسنهم: أقصر مسار + أقل nodes
+python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
 ```
 
 ### مشاكل متقدمة

@@ -27,6 +27,9 @@ class KeyboardAgent(Agent):
         keys = list(keys_waiting()) + list(keys_pressed())
         if keys != []:
             self.keys = keys
+        else:
+            # No key pressed - skip this turn (return None to indicate no move)
+            return None
 
         legal = state.getLegalActions(self.index)
         move = self.getMove(legal)
